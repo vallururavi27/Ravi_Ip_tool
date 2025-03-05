@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Monitoring Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd.
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+            font-weight: 500;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Varsity Network Monitoring Dashboard</h1>
+    </header>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Host Name</th>
+                    <th>City</th>
+                    <th>Status</th>
+                    <th>Latency (ms)</th>
+                </tr>
+            </thead>
+            <tbody id="status-table-body">
+                <!-- Rows will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function updateStatusTable() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#status-table-body');
+                    tableBody.innerHTML = '';
+                    for (const [ip, details] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        const ipCell = document.createElement('td');
+                        ipCell.textContent = ip;
+                        const hostCell = document.createElement('td');
+                        hostCell.textContent = details.host;
+                        const cityCell = document.createElement('td');
+                        cityCell.textContent = details.city;
+                        const statusCell = document.createElement('td');
+                        statusCell.textContent = details.status;
+                        const latencyCell = document.createElement('td');
+                        latencyCell.textContent = details.latency;
+                        row.appendChild(ipCell);
+                        row.appendChild(hostCell);
+                        row.appendChild(cityCell);
+                        row.appendChild(statusCell);
+                        row.appendChild(latencyCell);
+                        tableBody.appendChild(row);
+                    }
+                });
+        }
+
+        setInterval(updateStatusTable, 5000); // Refresh the table every 5 seconds
+    </script>
+</body>
+</html>
